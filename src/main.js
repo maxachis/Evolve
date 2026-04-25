@@ -22,6 +22,7 @@ import { index, mainVue, initTabs, loadTab } from './index.js';
 import { setWeather, seasonDesc, astrologySign, astroVal } from './seasons.js';
 import { getTopChange } from './wiki/change.js';
 import { enableDebug, updateDebugData } from './debug.js';
+import { enableAutomationHooks } from './automation_hooks.js';
 
 {
     $(document).ready(function() {
@@ -51,8 +52,13 @@ window.addEventListener('storage', (e) => {
     multitab = true;
 });
 
+if (typeof window !== 'undefined' && window.location && /[?&]automation=1\b/.test(window.location.search)){
+    global.settings.expose = true;
+}
+
 if (global.settings.expose){
     enableDebug();
+    enableAutomationHooks();
 }
 
 var quickMap = {
@@ -8097,6 +8103,9 @@ function fastLoop(){
     if (global.settings.expose){
         if (!window['evolve']){
             enableDebug();
+        }
+        if (!window['evolve_auto']){
+            enableAutomationHooks();
         }
         updateDebugData();
     }
